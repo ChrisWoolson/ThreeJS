@@ -1,64 +1,69 @@
 import * as CANNON from 'cannon-es';
 import * as THREE from 'three';
-
+import {camera} from '../main.js'
 export const world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-9.82,0)
 })
 
 export const groundBody = new CANNON.Body({
-    type: CANNON.Body.STATIC,
+    type: CANNON.Body.KINEMATIC,
     shape: new CANNON.Plane(),
 })
 
-export const sphereBody = new CANNON.Body({
+export const carBody = new CANNON.Body({
     mass: 7,
-    shape: new CANNON.Sphere(5),
+    shape: new CANNON.Box(new CANNON.Vec3(4,3,11)),
     fixedRotation: true,
 })
-
-var cloudBodyArray = []
 
 var bodyControls = {
     wKey: false,
     aKey: false,
     sKey: false,
     dKey: false,
-}
-
-function initClouds(){
-    for(var i = 0; i < 2; i++){
-        cloudBodyArray.push(new CANNON.Body({
-            mass: 1,
-            shape: new CANNON.Sphere(4),
-            fixedRotation: false,
-            position: new CANNON.Vec3(10*i,4,10)
-            
-        }))
-        world.addBody(cloudBodyArray[i])
-    }
+    direction: 0,
+    speed: 0,
 }
 
 export function createPhysicsWorld(){
     groundBody.quaternion.setFromEuler(-Math.PI/2,0,0)
-    world.addBody(sphereBody)
-    sphereBody.position.y = 10
+    world.addBody(carBody)
+    carBody.position.y = 10
     world.addBody(groundBody)
-    initClouds()
 }
 
 export function moveBody(){
+
     if(bodyControls.wKey){
-        sphereBody.position.z -= 0.1;
+        bodyControls.speed+=0.04;
     }
     if(bodyControls.sKey){
-        sphereBody.position.z += 0.1;
+        bodyControls.speed-=0.04;
     }
     if(bodyControls.aKey){
-        sphereBody.position.x -= 0.1;
+        carBody.quaternion.setFromEuler(0,bodyControls.direction+=0.05,0)
     }
     if(bodyControls.dKey){
-        sphereBody.position.x += 0.1;
+        carBody.quaternion.setFromEuler(0,bodyControls.direction-=0.05,0)
     }
+    if(!bodyControls.wKey && !bodyControls.sKey){
+        if(bodyControls.speed > 0){
+            bodyControls.speed-=0.1;
+        }
+        else if(bodyControls.speed < 0){
+            bodyControls.speed+=0.1;
+        }
+        if(Math.abs(bodyControls.speed) < 0.1){
+            bodyControls.speed = 0;
+        }
+    }
+    //console.log(carBody.quaternion)
+    carBody.quaternion.setFromEuler(0,bodyControls.direction,0)
+    
+    carBody.position.x += Math.sin(bodyControls.direction)*bodyControls.speed;
+    carBody.position.z += Math.cos(bodyControls.direction)*bodyControls.speed;
+    camera.position.x += Math.sin(bodyControls.direction)*bodyControls.speed;
+    camera.position.z += Math.cos(bodyControls.direction)*bodyControls.speed;
 }
 
 document.addEventListener("keydown", onDocumentKeyDown, false);

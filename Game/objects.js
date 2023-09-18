@@ -10,17 +10,17 @@ const loader = new GLTFLoader();
 //objectGLTFs
 const skyGeometry = new THREE.SphereGeometry(100, 100, 100);
 const skyMaterial = new THREE.MeshBasicMaterial({ color: 0x77b5fe });
-const helicopterGLTF = 'Textures/Helicopter/Helicopter.gltf';
+const carGLTF = 'Textures/Car/Nissan.gltf';
 
 //objects
-export var helicopter = new Object3D();
+export var car = new Object3D();
 export const sky = new THREE.Mesh(skyGeometry, skyMaterial);
 
 export const objectsInit = async () => {
 
-    loader.load(helicopterGLTF, (gltf)=>{
-        helicopter = gltf.scene;
-        helicopter.scale.set(0.3,0.3,0.3);
+    loader.load(carGLTF, (gltf)=>{
+        car = gltf.scene;
+        car.scale.set(4,4,4);
         scene.add(gltf.scene);
     })
     sky.material.side = THREE.BackSide;
