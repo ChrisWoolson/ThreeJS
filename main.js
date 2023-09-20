@@ -20,7 +20,10 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 const orbitControls = new OrbitControls( camera, renderer.domElement );
-const light = new THREE.AmbientLight( 0xffffff, 10); 
+
+// lighting and shadows 
+
+const light = new THREE.AmbientLight( 0xffffff, 5); 
 scene.add( light );
 
  
