@@ -23,10 +23,18 @@ const orbitControls = new OrbitControls( camera, renderer.domElement );
 
 // lighting and shadows 
 
-const light = new THREE.AmbientLight( 0xffffff, 5); 
-scene.add( light );
+// const ambience = new THREE.AmbientLight( 0xffffff, 5); 
+// scene.add( ambience );
 
- 
+// const spotlight = new THREE.DirectionalLight(0xFF0000,20)
+// scene.add(spotlight);
+
+// const toplight = new THREE.HemisphereLight( 0xfcfce8, 0x080820, 10 );
+// scene.add(toplight);
+
+const pointLight = new THREE.PointLight(0xffffff,10,100);
+pointLight.position.set( 10, 0, 0);
+scene.add(pointLight);
 
 objectsInit();
 createPhysicsWorld();
